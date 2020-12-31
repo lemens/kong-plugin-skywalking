@@ -29,6 +29,7 @@ function Client:startBackendTimer(config)
     local service_name = config.service_name
     local service_instance_name = config.service_instance_name
     local heartbeat_timer = metadata_buffer:get('sw_heartbeat_timer')
+    local worker_id = config.worker_id
 
     -- The codes of timer setup is following the OpenResty timer doc
     local delay = 3  -- in seconds
@@ -55,7 +56,7 @@ function Client:startBackendTimer(config)
         end
     end
 
-    if 0 == ngx.worker.id() and heartbeat_timer == nil then
+    if worker_id == ngx.worker.id() and heartbeat_timer == nil then
         local ok, err = new_timer(delay, check)
         if not ok then
             log.err("failed to create timer: ", err)
