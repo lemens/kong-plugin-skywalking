@@ -33,6 +33,7 @@ function SkyWalkingHandler:access(config)
   end
   if config.sample_ratio == 1 or math.random() * 10000 < config.sample_ratio then
       kong.ctx.plugin.skywalking_sample = true
+      config.worker_id = ngx.worker.id()
       sw_client:startBackendTimer(config) 
       sw_tracer:start(config)
   end
